@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useMemo } from 'react'
 import MetricCard from './MetricCard'
 import {
   calculateDashboardStats,
@@ -7,14 +7,12 @@ import {
 import './StatsGrid.css'
 
 export default function StatsGrid({ subscriptions = [], isLoading = false }) {
-  const [stats, setStats] = useState(null)
-
-  // Calculate stats whenever subscriptions change
-  useMemo(() => {
+  // Calculate stats whenever subscriptions change using useMemo
+  const stats = useMemo(() => {
     if (subscriptions.length >= 0 && !isLoading) {
-      const calculated = calculateDashboardStats(subscriptions)
-      setStats(calculated)
+      return calculateDashboardStats(subscriptions)
     }
+    return null
   }, [subscriptions, isLoading])
 
   if (!stats) {

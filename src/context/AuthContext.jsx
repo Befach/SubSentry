@@ -3,23 +3,22 @@ import React, { createContext, useContext, useState, useEffect } from 'react'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  // Check if user is logged in on mount
-  useEffect(() => {
+  // Initialize user from localStorage on mount
+  const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem('subsentry_user')
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        return JSON.parse(storedUser)
       } catch (err) {
         console.error('Failed to parse stored user:', err)
         localStorage.removeItem('subsentry_user')
+        return null
       }
     }
-    setLoading(false)
-  }, [])
+    return null
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const login = (userData) => {
     try {
